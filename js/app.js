@@ -7378,110 +7378,149 @@ function otherModel(){
 
   if(product==="mug"){
 
-    const bodyMaterial=
-      ceramic();
+    /* Keramische sublimatiemok – print ALLEEN op buitenwand
+       UV: U = 0→1 rondom (één omtrek), V = 0→1 over printzone
+       Bron: bounds() via paintLayerStackToTexture (niet full canvas)
+       Geen print op binnenkant / rand / bodem / handvat
+    */
+    const bodyMaterial = ceramic();
+    const outerR = 1.15;
+    const innerR = 1.05;
+    const height = 2.40;
+    const bottomThick = 0.09;
+    const printMargin = 0.13;
 
-    const body=
-      new THREE.Mesh(
-        new THREE.CylinderGeometry(
-          1.2,
-          1.2,
-          2.35,
-          96,
-          1,
-          true
-        ),
-        bodyMaterial
-      );
-
-    group.add(body);
-
-    const mugCanvas=
-      document.createElement("canvas");
-
-    mugCanvas.width=2048;
-    mugCanvas.height=1024;
-
-    const mctx=
-      mugCanvas.getContext("2d");
-
-    mctx.fillStyle="#f3ede3";
-
-    mctx.fillRect(
-      0,
-      0,
-      2048,
-      1024
+    /* Binnenwand – BackSide zodat alleen de binnenkant wit is */
+    const innerMat = new THREE.MeshPhysicalMaterial({
+      color: 0xf0e9de,
+      metalness: 0,
+      roughness: finish === "gloss" ? 0.12 : 0.82,
+      clearcoat: finish === "gloss" ? 1.0 : 0.05,
+      clearcoatRoughness: finish === "gloss" ? 0.05 : 0.55,
+      side: THREE.BackSide
+    });
+    const innerWall = new THREE.Mesh(
+      new THREE.CylinderGeometry(innerR, innerR, height - bottomThick, 64, 1, true),
+      innerMat
     );
+    innerWall.position.y = bottomThick * 0.5;
+    group.add(innerWall);
 
-    mctx.drawImage(
-      canvas,
-      0,
-      0,
-      2048,
-      1024
+    /* Binnenbodem */
+    const bottomInner = new THREE.Mesh(
+      new THREE.CircleGeometry(innerR - 0.001, 48),
+      bodyMaterial
     );
+    bottomInner.rotation.x = -Math.PI / 2;
+    bottomInner.position.y = -height / 2 + bottomThick;
+    group.add(bottomInner);
 
-    const mugTexture=
-      new THREE.CanvasTexture(
-        mugCanvas
-      );
+    /* Buitenbodem */
+    const bottomOuter = new THREE.Mesh(
+      new THREE.CircleGeometry(outerR, 48),
+      bodyMaterial
+    );
+    bottomOuter.rotation.x = Math.PI / 2;
+    bottomOuter.position.y = -height / 2;
+    group.add(bottomOuter);
 
-    mugTexture.colorSpace=
-      THREE.SRGBColorSpace;
+    /* Witte buitenbanden boven/onder de printzone */
+    const bandH = printMargin;
+    const topBand = new THREE.Mesh(
+      new THREE.CylinderGeometry(outerR, outerR, bandH, 64, 1, true),
+      bodyMaterial
+    );
+    topBand.position.y = height / 2 - bandH / 2;
+    group.add(topBand);
 
-    mugTexture.wrapS=
-      THREE.RepeatWrapping;
+    const botBand = new THREE.Mesh(
+      new THREE.CylinderGeometry(outerR, outerR, bandH, 64, 1, true),
+      bodyMaterial
+    );
+    botBand.position.y = -height / 2 + bandH / 2;
+    group.add(botBand);
 
-    const mugPrint=
-      new THREE.Mesh(
-        new THREE.CylinderGeometry(
-          1.205,
-          1.205,
-          2.22,
-          128,
-          1,
-          true
-        ),
-        new THREE.MeshPhysicalMaterial({
+    /* Bovenrand */
+    const rim = new THREE.Mesh(
+      new THREE.TorusGeometry((outerR + innerR) / 2, (outerR - innerR) / 2 * 0.95, 10, 48),
+      bodyMaterial
+    );
+    rim.rotation.x = Math.PI / 2;
+    rim.position.y = height / 2;
+    group.add(rim);
 
-          map:mugTexture,
+    /* === PRINT TEXTURE: alleen bounds()-zone, 1× rondom === */
+    const b = bounds();
+    const TW = 2048;
+    const TH = 1024;
+    const mugCanvas = document.createElement("canvas");
+    mugCanvas.width = TW;
+    mugCanvas.height = TH;
+    const mctx = mugCanvas.getContext("2d");
+    mctx.fillStyle = "#f3ede3";
+    mctx.fillRect(0, 0, TW, TH);
 
-          roughness:
-            finish==="gloss"
-              ?.10
-              :.35,
+    if (typeof paintLayerStackToTexture === "function") {
+      paintLayerStackToTexture(mctx, TW, TH, b);
+    } else {
+      try {
+        mctx.drawImage(canvas, b.x, b.y, b.w, b.h, 0, 0, TW, TH);
+      } catch (_) {}
+    }
 
-          clearcoat:
-            finish==="gloss"
-              ?.85
-              :.25,
+    const mugTexture = new THREE.CanvasTexture(mugCanvas);
+    if (THREE.SRGBColorSpace) mugTexture.colorSpace = THREE.SRGBColorSpace;
+    /* Één keer rondom: Clamp, geen Repeat */
+    mugTexture.wrapS = THREE.ClampToEdgeWrapping;
+    mugTexture.wrapT = THREE.ClampToEdgeWrapping;
+    mugTexture.minFilter = THREE.LinearFilter;
+    mugTexture.magFilter = THREE.LinearFilter;
+    mugTexture.generateMipmaps = false;
+    mugTexture.flipY = true;
+    mugTexture.needsUpdate = true;
 
-          side:THREE.DoubleSide
+    const printH = height - printMargin * 2;
+    const printMat = new THREE.MeshPhysicalMaterial({
+      map: mugTexture,
+      color: 0xffffff,
+      metalness: 0,
+      roughness: finish === "gloss" ? 0.10 : 0.35,
+      clearcoat: finish === "gloss" ? 0.85 : 0.25,
+      clearcoatRoughness: finish === "gloss" ? 0.08 : 0.40,
+      side: THREE.FrontSide,
+      polygonOffset: true,
+      polygonOffsetFactor: -1,
+      polygonOffsetUnits: -1
+    });
 
-        })
-      );
-
+    /* Print-mesh = buitenwand in de printzone (géén witte shell eronder:
+       die zou de print op de verre helft afdekken) */
+    const printGeo = new THREE.CylinderGeometry(
+      outerR + 0.002,
+      outerR + 0.002,
+      printH,
+      128,
+      1,
+      true
+    );
+    /* Standaard CylinderGeometry UV: U 0→1 rondom, V 0→1 bottom→top.
+       Normals wijzen naar buiten → FrontSide toont alleen de buitenkant. */
+    const mugPrint = new THREE.Mesh(printGeo, printMat);
+    mugPrint.position.y = 0;
+    mugPrint.renderOrder = 10;
+    mugPrint.castShadow = false;
+    mugPrint.receiveShadow = false;
     group.add(mugPrint);
 
-    const handle=
-      new THREE.Mesh(
-        new THREE.TorusGeometry(
-          .90,
-          .18,
-          32,
-          80,
-          Math.PI*1.55
-        ),
-        bodyMaterial
-      );
-
-    handle.rotation.y=
-      Math.PI/2;
-
-    handle.position.x=
-      1.25;
-
+    /* C-handvat (wit, geen print) */
+    const handleMajor = 0.40;
+    const handleTube = 0.085;
+    const handle = new THREE.Mesh(
+      new THREE.TorusGeometry(handleMajor, handleTube, 16, 48, Math.PI * 1.40),
+      bodyMaterial
+    );
+    handle.rotation.y = Math.PI / 2;
+    handle.position.set(outerR + handleMajor * 0.12, 0, 0);
     group.add(handle);
 
   }
