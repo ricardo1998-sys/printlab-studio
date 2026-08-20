@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PrintLab API Test</title>
+<style>
+  body{font-family:Arial,sans-serif;background:#111;color:#eee;max-width:820px;margin:40px auto;padding:20px}
+  h1{margin-bottom:8px}
+  p{color:#bbb}
+  button{background:#c9a66b;border:0;border-radius:8px;padding:12px 18px;font-weight:700;cursor:pointer;margin:6px 6px 6px 0}
+  pre{background:#1b1b1b;padding:16px;border-radius:10px;overflow:auto;min-height:160px}
+  .ok{color:#76d275}.err{color:#ff7777}
+</style>
+</head>
+<body>
+<h1>PrintLab API test</h1>
+<p>Deze pagina test of een ontwerp met objecten in de database kan worden opgeslagen en daarna weer opgehaald.</p>
+
+<button id="create">1. Testontwerp opslaan</button>
+<button id="open" disabled>2. Testontwerp openen</button>
+
+<pre id="result">Klik op "Testontwerp opslaan".</pre>
+
+<script>
+const result = document.getElementById("result");
+const createBtn = document.getElementById("create");
+const openBtn = document.getElementById("open");
+let designId = null;
+
+function show(data, ok=true){
+  result.className = ok ? "ok" : "err";
+  result.textContent = typeof data === "string" ? data : JSON.stringify(data,null,2);
+}
+
+createBtn.onclick = async () => {
+  createBtn.disabled = true;
+  show("Ontwerp wordt opgeslagen...");
+  try {
+    const payload = {
+      name: "PrintLab object test",
+      product_type: "wandtegel",
+      status: "draft",
+      design_data: {
+        width: 15,
+        height: 15
+      },
+      objects: [
+        {
+          type: "text",
+          data: {
+            text: "PrintLab",
+            x: 600,
+            y: 600,
+            size: 72
+          }
+        },
+        {
+          type: "image",
+          data: {
+            x: 600,
+            y: 600,
+            scale: 1
+          }
+        }
+      ]
+    };
+
+    const res = await fetch("/designs", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    show(data, res.ok);
+
+    if (res.ok && data.design_id) {
+      designId = data.design_id;
+      openBtn.disabled = false;
+    }
+  } catch (err) {
+    show("Fout: " + err.message, false);
+  } finally {
+    createBtn.disabled = false;
+  }
+};
+
+openBtn.onclick = async () => {
+  if (!designId) return;
+  openBtn.disabled = true;
+  show("Ontwerp wordt opgehaald...");
+  try {
+    const res = await fetch("/designs/" + encodeURIComponent(designId));
+    const data = await res.json();
+    show(data, res.ok);
+  } catch (err) {
+    show("Fout: " + err.message, false);
+  } finally {
+    openBtn.disabled = false;
+  }
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PrintLab NL — Designstudio</title>
+
+<!-- Three.js -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Anton&family=Bebas+Neue&family=Caveat:wght@400;700&family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Indie+Flower&family=Inter:wght@400;500;600;700;800&family=Lato:wght@400;700&family=League+Spartan:wght@400;700&family=Lobster&family=Montserrat:wght@400;700&family=Open+Sans:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Patrick+Hand&family=Permanent+Marker&family=Playfair+Display:wght@400;700&family=Poppins:wght@400;700&family=Raleway:wght@400;700&family=Roboto:wght@400;700&family=Sacramento&family=Satisfy&display=swap" rel="stylesheet">
+
+<!-- Styles -->
+<link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+  <div class="logo-group">
+    <img class="logo-printer" src="data:image/png;base64,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" alt="PrintLab printer" width="72" height="48" decoding="async">
+    <div class="logo-block">
+      <div class="logo">PRINTLAB<span>NL</span></div>
+      <div class="header-tagline">Jouw design. Jouw tegel.</div>
+    </div>
+  </div>
+
+  <div class="header-center">
+    <!-- Desktop: 3D/2D/Draaishow in header -->
+    <div class="view-switch" id="viewSwitchHeader">
+      <button id="view3d" type="button" onclick="setView('3d')">3D preview</button>
+      <button id="view2d" type="button" class="active" onclick="setView('2d')">2D weergave</button>
+      <button id="btnAutoRotate" type="button" class="btn-auto-rotate"
+        onclick="toggleAutoRotate(event)" title="Langzame 3D-draaishow" aria-pressed="false">
+        ▶ Draaishow
+      </button>
+    </div>
+    <!-- Mobiel: productinfo + 3D + 2D + Draaischerm op één horizontale rij -->
+    <div class="header-product-row" id="headerProductRow" aria-label="Product en weergave">
+      <span class="header-badge-text" id="headerBadgeText">Wandtegel · 11×11 cm · Mat</span>
+      <div class="view-switch badge-view-switch" id="viewSwitchBadge">
+        <button type="button" class="bv-3d" data-view="3d" onclick="setView('3d')">3D</button>
+        <button type="button" class="bv-2d active" data-view="2d" onclick="setView('2d')">2D</button>
+        <button type="button" class="bv-rotate btn-auto-rotate" id="btnAutoRotateMobile"
+          onclick="toggleAutoRotate(event)" title="Draaischerm" aria-pressed="false">↻</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <button class="header-btn" onclick="saveDesign()">Opslaan</button>
+    <button class="header-btn" type="button" title="Delen" onclick="toast('Delen binnenkort beschikbaar')">Delen</button>
+    <button class="header-btn primary" onclick="addCart()">
+      🛒 Bestellen · <span id="cartCount">0</span>
+    </button>
+  </div>
+
+</header>
+
+<div class="main">
+
+<nav class="toolbar" id="mainToolbar" aria-label="Configuratie">
+  <div class="toolbar-chrome" id="toolbarChrome">
+    <!-- handje/drag verwijderd: toolbar is vast -->
+    <button type="button" class="tb-close" id="toolbarClose" title="Sidebar verbergen" aria-label="Sidebar verbergen" onclick="closeMainToolbar(event)">×</button>
+  </div>
+
+  <button class="tool active tool-photo" id="toolPhoto" type="button" onclick="tool('photo',this)">
+    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2h6l2 2h3v11H4V8z"/><circle cx="12" cy="13" r="3.5"/></svg></span>
+    Foto
+  </button>
+
+  <button class="tool" type="button" onclick="tool('text',this)">
+    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 6h14M12 6v12M8 18h8"/></svg></span>
+    Tekst
+  </button>
+
+  <button class="tool" type="button" onclick="tool('clipart',this)">
+    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.5H19l-4.4 3.2 1.7 5.3L12 14.5 7.7 17l1.7-5.3L5 8.5h5.2z"/></svg></span>
+    Clipart
+  </button>
+
+  <button class="tool" type="button" onclick="tool('filters',this)">
+    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="10" r="4"/><circle cx="16" cy="10" r="4"/><circle cx="12" cy="15.5" r="4"/></svg></span>
+    Filters
+  </button>
+
+  <button class="tool" type="button" onclick="tool('layers',this)">
+    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c-3.5 4.5-6 7.2-6 10a6 6 0 0012 0c0-2.8-2.5-5.5-6-10z"/></svg></span>
+    <span class="tool-label-desk">Kleuren</span>
+    <span class="tool-label-mob">Lagen</span>
+  </button>
+
+  <button class="tool tool-product" id="toolProduct" type="button" onclick="tool('product',this)">
+    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M7 4v6M17 4v6M4 17h10M7 14v6"/></svg></span>
+    <span class="tool-label-desk">Formaat</span>
+    <span class="tool-label-mob">Product</span>
+  </button>
+
+  <button class="tool" type="button" onclick="tool('background',this)">
+    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16M12 4v16"/></svg></span>
+    Structuur
+  </button>
+
+  <button class="tool" type="button" onclick="tool('help',this)">
+    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 014.3 1.7c0 1.5-2.3 2-2.3 3.3"/><circle cx="12" cy="17" r=".8" fill="var(--gold)" stroke="none"/></svg></span>
+    Help
+  </button>
+
+</nav>
+<button type="button" class="toolbar-reopen" id="toolbarReopen" onclick="openMainToolbar(event)" title="Menu tonen" aria-label="Menu tonen" hidden>☰</button>
+
+<aside class="left" id="left"></aside>
+
+<section class="workspace">
+
+  <div class="badge-wrap" id="badgeWrap">
+    <div class="badge" id="badge">
+      Wandtegel · 11×11 cm · Mat
+    </div>
+  </div>
+
+  <!-- Desktop: één zwevend blok — verticale tools BOVEN anker (☰/×) -->
+  <div class="desktop-tools-dock" id="desktopToolsDock" aria-label="Laagbediening">
+    <div class="ws-layer-stack desktop-stack" id="desktopLayerStack" aria-hidden="true">
+      <div class="workspace-controls" aria-label="Laagbewerking desktop">
+        <button type="button" onclick="zoomSelected(-0.12)" title="Kleiner">−</button>
+        <button type="button" onclick="zoomSelected(0.12)" title="Groter">+</button>
+        <button type="button" onclick="toggleRotateSlider()" title="Roteren">↻</button>
+        <button type="button" onclick="center()" title="Centreren">⦿</button>
+        <button type="button" onclick="selectNextLayer()" title="Volgende laag">⛶</button>
+        <button type="button" onclick="toggleLayersPanel(event)" title="Lagen">☷</button>
+        <button type="button" onclick="undo()" title="Ongedaan maken">⌫</button>
+      </div>
+    </div>
+    <button type="button" class="desktop-menu-fab" id="desktopMenuFab"
+      onclick="toggleLayerMenu(event)" title="Laagmenu" aria-label="Laagmenu">☰</button>
+  </div>
+
+  <div class="stage">
+
+    <canvas
+      id="editorCanvas"
+      width="1200"
+      height="1200">
+    </canvas>
+
+    <div id="three"></div>
+
+  </div>
+
+  <!-- Bottom controls: Sjablonen + Randen (desktop gecentreerd boven templatebar) -->
+  <div class="bottom-controls" id="bottomControls" aria-label="Onderste bediening">
+    <button type="button" class="template-fab" id="templateFab" onclick="toggleTemplateBar(event)" title="Sjablonen openen" aria-label="Sjablonen openen" hidden>✨ Sjablonen</button>
+    <div class="edge-print-float" id="edgePrintFloat" aria-label="Randen meebedrukken">
+      <span class="edge-lock-label">Randen meebedrukken</span>
+      <button type="button" class="edge-toggle-btn" id="edgeToggleBtn" onclick="toggleEdgeFromSide()" aria-pressed="false">
+        <span class="edge-dot"></span>
+        <span class="edge-state" id="edgeStateLabel">UIT</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobiel: ☰ + instructie + slot op één rij boven bottom-nav -->
+  <div class="mobile-3d-bar" id="mobile3dBar" aria-label="3D-bediening">
+    <div class="ws-layer-stack" id="wsLayerStack">
+      <button type="button" class="ws-menu-toggle" id="wsMenuToggle" onclick="toggleLayerMenu(event)" title="Laagmenu" aria-label="Laagmenu">☰</button>
+      <div class="workspace-controls" id="workspaceControls" aria-label="Laagbewerking">
+        <button type="button" onclick="zoomSelected(-0.12)" title="Kleiner">−</button>
+        <button type="button" onclick="zoomSelected(0.12)" title="Groter">+</button>
+        <button type="button" id="btnWsRotate" onclick="toggleRotateSlider()" title="Roteren">↻</button>
+        <button type="button" onclick="center()" title="Centreren">⦿</button>
+        <button type="button" onclick="selectNextLayer()" title="Volgende laag">⛶</button>
+        <button type="button" id="btnLayersPanel" onclick="toggleLayersPanel(event)" title="Lagen">☷</button>
+        <button type="button" onclick="undo()" title="Ongedaan maken">⌫</button>
+      </div>
+    </div>
+    <div class="layers-panel" id="layersPanel" aria-label="Lagen" hidden>
+      <div class="lp-head">
+        <strong>Lagen</strong>
+        <button type="button" class="lp-close" onclick="closeLayersPanel()" aria-label="Sluiten">✕</button>
+      </div>
+      <div class="lp-list" id="layersPanelList"></div>
+    </div>
+    <div class="help" id="help" style="display:none">
+      Dubbelklik voor selecteren · 🖱 Sleep om te draaien · 🔍 Scroll om te zoomen
+    </div>
+    <button type="button" class="ws-lock-btn" id="wsLockBtn" onclick="toggleTileLock(event)" title="Compositie vergrendelen" aria-label="Compositie vergrendelen">🔓</button>
+  </div>
+
+  <nav class="side-rail" id="sideRail" aria-label="Ontwerpbediening">
+    <div class="side-rail-main">
+      <button type="button" onclick="openScaleSlider()"><span class="sr-ico">📐</span>Formaat</button>
+      <button type="button" onclick="openRotateSlider()"><span class="sr-ico">↻</span>Roteren</button>
+      <button type="button" id="sideFitBtn" onclick="toggleFit()"><span class="sr-ico">⛶</span>Passend</button>
+      <button type="button" onclick="openMobilePhotoUpload()"><span class="sr-ico">📷</span>Foto</button>
+      <button type="button" onclick="openColorFiltersPanel()"><span class="sr-ico">🎨</span>Kleur</button>
+    </div>
+  </nav>
+
+  <div class="design-slider-bar" id="designSliderBar">
+    <div class="ds-title">
+      <span id="designSliderTitle">Formaat</span>
+      <span id="designSliderValue" class="ds-value"></span>
+      <button type="button" class="ds-close" onclick="closeDesignSlider()" aria-label="Sluiten">✕</button>
+    </div>
+    <input id="designSlider" type="range" min="0" max="100" value="50"
+      oninput="onDesignSliderInput(this.value)">
+  </div>
+
+  <!-- Tekstbediening: onder de tegel, leunend op de bottom-navigatie -->
+  <div class="text-bottom-bar" id="text3dBar" style="display:none">
+    <div class="srt-row">
+      <button type="button" id="btnText3dEdit" class="srt-move" onclick="toggleText3dEdit()">Tekst verplaatsen</button>
+      <button type="button" onclick="text3dSize(-8)" title="Kleiner">A−</button>
+      <button type="button" onclick="text3dSize(8)" title="Groter">A+</button>
+      <button type="button" class="srt-trash" onclick="removeSelectedText()" title="Tekst verwijderen">🗑</button>
+    </div>
+  </div>
+
+  <div class="text-dock" id="textDock" aria-label="Tekstinstellingen">
+    <div class="td-head">
+      <strong id="textDockTitle">Tekst</strong>
+      <button type="button" class="td-close" onclick="closeTextDock()" aria-label="Sluiten">✕</button>
+    </div>
+    <div class="td-body" id="textDockBody"></div>
+  </div>
+
+  <!-- view-switch staat in de header (desktop); mobiel gebruikt header-center ook -->
+
+  <!-- Template / inspiratiebalk + uitklapbare bibliotheek -->
+  <div class="template-bar" id="templateBar" aria-label="Templates">
+    <div class="template-bar-head">
+      <div class="template-bar-label">Kies een sjabloon</div>
+      <div class="template-bar-actions">
+        <button type="button" class="template-more" id="templateMoreBtn" onclick="toggleTemplateLibrary(event)">Bekijk meer ▾</button>
+        <button type="button" class="template-collapse-btn" id="templateCollapseBtn" onclick="toggleTemplateBar(event)" title="Sjablonen inklappen" aria-expanded="true" aria-label="Sjablonen inklappen">▾</button>
+      </div>
+    </div>
+    <div class="template-cats" id="templateCats" hidden></div>
+    <div class="template-strip" id="templateStrip"></div>
+    <div class="template-library" id="templateLibrary" hidden></div>
+  </div>
+
+</section>
+
+<!-- Desktop: Aanpassen-paneel (links van Product) -->
+<aside class="aanpassen-panel" id="aanpassenPanel" aria-label="Product aanpassen">
+  <div class="ap-header">
+    <span>AANPASSEN</span>
+    <button type="button" class="ap-close" onclick="toggleAanpassenPanel(false)" title="Sluiten" aria-label="Sluiten">×</button>
+  </div>
+  <div class="ap-body" id="apBody">
+    <!-- Productopties worden hierheen verplaatst op desktop bij openen -->
+  </div>
+</aside>
+
+<aside class="right" id="rightPanel">
+
+  <!-- Collapse-pijl buiten de header, links van het paneel -->
+  <button type="button" class="right-collapse-btn" id="rightCollapseBtn"
+    onclick="toggleProductPanel()" title="Productpaneel inklappen" aria-label="Productpaneel in-/uitklappen">←</button>
+
+  <div class="right-header" hidden aria-hidden="true">
+    <div class="panel-title">Product</div>
+  </div>
+
+  <div class="right-scroll" id="rightScroll">
+
+  <!-- Desktop referentie-stijl PRODUCT block -->
+  <div class="rp-section rp-product">
+    <div class="rp-label">PRODUCT</div>
+    <div class="rp-product-card">
+      <div class="rp-thumb" id="productThumb" aria-hidden="true"></div>
+      <div class="rp-meta">
+        <div class="rp-name" id="productCardName">Wandtegel</div>
+        <div class="rp-sub" id="productCardFinish">Mat</div>
+        <div class="rp-sub" id="productCardSize">11 × 11 cm</div>
+      </div>
+      <button type="button" class="rp-aanpassen" id="btnAanpassen" onclick="toggleAanpassenPanel()">AANPASSEN</button>
+    </div>
+  </div>
+
+  <div class="rp-divider"></div>
+
+  <div class="rp-section">
+    <div class="rp-label">LAAG OVERZICHT</div>
+    <div class="rp-layers" id="rpLayers"></div>
+  </div>
+
+  <div class="rp-divider"></div>
+
+  <!-- Originele product-card blijft voor mobiel / compat -->
+  <div class="product-card" id="productCard">
+    <div class="product-card-thumb" aria-hidden="true"></div>
+    <div class="product-card-meta">
+      <strong id="productCardNameLegacy">Wandtegel</strong>
+      <span id="productCardFinishLegacy">Mat</span>
+      <span id="productCardSizeLegacy">11 × 11 cm</span>
+    </div>
+    <button type="button" class="product-card-btn" onclick="tool('product', document.getElementById('toolProduct'))">Aanpassen</button>
+  </div>
+
+  <div id="productOptionsBlock">
+
+  <div class="section" style="margin-top:12px">
+
+    <div class="label">
+      Producttype
+    </div>
+
+    <select
+      id="product"
+      onchange="changeProduct()">
+
+      <option value="tile">
+        🧱 Wandtegel
+      </option>
+
+      <option value="coaster">
+        ◯ Onderzetter
+      </option>
+
+      <option value="aluminium">
+        ▭ Aluminium paneel
+      </option>
+
+      <option value="mouse">
+        ▬ Muismat
+      </option>
+
+      <option value="mug">
+        ☕ Mok
+      </option>
+
+    </select>
+
+  </div>
+
+  <div class="section">
+
+    <div class="label">
+      Formaat
+    </div>
+
+    <div
+      class="size-grid"
+      id="sizes">
+    </div>
+
+  </div>
+
+  <div id="tileOptions">
+
+    <div class="section" id="productFinishSection">
+
+      <div class="label">
+        Afwerking
+      </div>
+
+      <div class="finish-grid">
+
+        <button
+          id="mat"
+          class="finish active"
+          onclick="setFinish('mat')">
+
+          <div class="finish-preview mat"></div>
+
+          <strong>Mat</strong><br>
+
+          <small>
+            Zachte keramische uitstraling
+          </small>
+
+        </button>
+
+        <button
+          id="gloss"
+          class="finish"
+          onclick="setFinish('gloss')">
+
+          <div class="finish-preview gloss"></div>
+
+          <strong>Glans</strong><br>
+
+          <small>
+            Heldere reflectie
+          </small>
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="section orientation-hidden" id="tileOrientationSection" hidden style="display:none">
+
+      <div class="label">
+        Oriëntatie
+      </div>
+
+      <div class="finish-grid tile-orientation-grid">
+
+        <button type="button" id="tileOrientationPortrait" class="finish active"
+          onclick="setTileOrientation('portrait')">
+          <span class="orientation-icon orientation-icon-portrait" aria-hidden="true">
+            <span class="orientation-dash"></span>
+            <span class="orientation-dash"></span>
+            <span class="orientation-dash"></span>
+          </span>
+          <strong>Portret</strong><br>
+          <small id="tileOrientationPortraitLabel">20 × 30 cm · verticaal</small>
+        </button>
+
+        <button type="button" id="tileOrientationLandscape" class="finish"
+          onclick="setTileOrientation('landscape')">
+          <span class="orientation-icon orientation-icon-landscape" aria-hidden="true">
+            <span class="orientation-dash"></span>
+            <span class="orientation-dash"></span>
+            <span class="orientation-dash"></span>
+          </span>
+          <strong>Landschap</strong><br>
+          <small id="tileOrientationLandscapeLabel">30 × 20 cm · horizontaal</small>
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="section" id="productEdgeSection">
+
+      <div class="toggle">
+
+        <div>
+
+          <strong>
+            Randen meebedrukken
+          </strong>
+
+          <small>
+            Print loopt mee over de afgeronde tegelrand.
+          </small>
+
+        </div>
+
+        <button
+          id="edge"
+          class="switch"
+          onclick="toggleEdge()">
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Onderzetter: vorm + materiaal (capability-gestuurd via PRODUCT_CATALOG) -->
+  <div id="coasterOptions" style="display:none">
+
+    <div class="section" id="coasterShapeSection">
+      <div class="label">Vorm</div>
+      <div class="finish-grid" id="coasterShapeGrid"></div>
+    </div>
+
+    <div class="section" id="coasterMaterialSection">
+      <div class="label">Materiaal / uitvoering</div>
+      <div class="finish-grid" id="coasterMaterialGrid"></div>
+    </div>
+
+    <div class="section" id="coasterFormatSection">
+      <div class="label">Formaat</div>
+      <div id="coasterFormatLabel" style="font-size:14px;color:var(--muted);padding:4px 0 8px">Ø 9,5 cm</div>
+    </div>
+
+  </div>
+
+  </div><!-- /#productOptionsBlock -->
+
+  <div class="section desktop-only-layers">
+
+    <div class="label">
+      Laag overzicht
+    </div>
+
+    <div id="layers"></div>
+
+  </div>
+
+  <div class="section right-info-section">
+    <button type="button" class="right-info-toggle" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
+      Meer informatie <span class="right-info-dots">⋮</span>
+    </button>
+    <div class="right-info-body">
+      <details class="info-block">
+        <summary>Verzending</summary>
+        <p>Verzending binnen Nederland in 2–4 werkdagen. Track &amp; trace standaard inbegrepen.</p>
+      </details>
+      <details class="info-block">
+        <summary>Retourneren</summary>
+        <p>Gepersonaliseerde producten vallen buiten het herroepingsrecht. Productfouten: neem contact op binnen 14 dagen.</p>
+      </details>
+      <details class="info-block">
+        <summary>Productinformatie</summary>
+        <p>Keramische wandtegel, UV-print, mat of glans afwerking. Geschikt voor binnenmuren.</p>
+      </details>
+    </div>
+  </div>
+
+  <!-- Mobiel: prijs/aantal/cart blijft in product-sheet (desktop gebruikt right-footer) -->
+  <div class="section mobile-purchase-fallback" style="display:none">
+    <div class="label">Aantal</div>
+    <div class="quantity">
+      <button type="button" onclick="quantity(-1)">−</button>
+      <input id="qtyMobile" type="number" min="1" value="1" onchange="setQty(this.value)">
+      <button type="button" onclick="quantity(1)">+</button>
+    </div>
+    <div class="price" style="margin-top:12px">
+      <div class="price-row"><span>Prijs per stuk</span><span id="unitMobile">€ 7,95</span></div>
+      <div class="price-row"><span>Aantal</span><span id="qtyLabelMobile">1</span></div>
+      <div class="total"><span>Totaal</span><span id="totalMobile">€ 7,95</span></div>
+      <button class="cart" type="button" onclick="addCart()">Toevoegen aan winkelwagen</button>
+      <div class="quality">✓ Ontwerp wordt gecontroleerd op printkwaliteit</div>
+    </div>
+  </div>
+
+  <div class="quality desktop-quality" style="margin-top:16px">
+    ✓ Ontwerp wordt gecontroleerd op printkwaliteit
+  </div>
+
+  </div><!-- /.right-scroll -->
+
+  <!-- Vaste aankoopzone — inklapbaar → compacte knop (desktop) -->
+  <button type="button" class="purchase-fab" id="purchaseFab" onclick="togglePurchaseBar(event)" title="Winkelwagen openen" aria-label="Winkelwagen openen" hidden>
+    <span class="purchase-fab-ico">🛒</span>
+    <span class="purchase-fab-price" id="purchaseFabPrice">€ 7,95</span>
+  </button>
+  <div class="right-footer purchase-bar" id="purchaseBar" aria-label="Aankoop">
+    <div class="purchase-bar-top">
+      <button type="button" class="purchase-collapse-btn" id="purchaseCollapseBtn" onclick="togglePurchaseBar(event)" title="Winkelwagen inklappen" aria-expanded="true" aria-label="Winkelwagen inklappen">▾</button>
+    </div>
+    <div class="pb-compact">
+      <div class="pb-compact-left">
+        <div class="pb-total-label"><span id="qtyLabel">1</span> item<span class="pb-item-plural" id="qtyPlural"></span></div>
+        <div class="pb-unit"><span id="unit">€ 7,95</span> / stuk · <span id="qtyLabel2">1</span>×</div>
+      </div>
+      <div class="pb-compact-right">
+        <div class="pb-total" id="total">€ 7,95</div>
+        <div class="pb-qty">
+          <button type="button" onclick="quantity(-1)" aria-label="Minder">−</button>
+          <input id="qty" type="number" min="1" value="1" onchange="setQty(this.value)" aria-label="Aantal">
+          <button type="button" onclick="quantity(1)" aria-label="Meer">+</button>
+        </div>
+      </div>
+    </div>
+    <span id="edgePrice" style="display:none;font-size:11px;color:var(--muted)">+ rand € 1,50</span>
+    <button type="button" class="pb-cart" onclick="addCart()">🛒 In winkelwagen</button>
+    <div class="right-sales-info" aria-label="Service-informatie">
+      <div class="rsi-row">
+        <svg class="rsi-ico" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 7h11v10H1z"/><path d="M12 10h4l3 3v4h-7V10z"/><circle cx="5.5" cy="18.5" r="1.5"/><circle cx="16.5" cy="18.5" r="1.5"/>
+        </svg>
+        <span>Gratis verzending vanaf €50</span>
+      </div>
+      <div class="rsi-row">
+        <svg class="rsi-ico" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+        </svg>
+        <span>Levertijd 3–5 werkdagen</span>
+      </div>
+      <div class="rsi-row">
+        <svg class="rsi-ico" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>
+        </svg>
+        <span>Niet goed? Geld terug</span>
+      </div>
+    </div>
+  </div>
+
+</aside>
+
+<!-- Desktop: compacte knop om Product-paneel weer te openen -->
+<button type="button" class="product-reopen-fab" id="productReopenFab"
+  onclick="toggleProductPanel(true)" title="Productpaneel openen" aria-label="Productpaneel openen">›</button>
+
+</div>
+</div>
+
+<div
+  class="toast"
+  id="toast">
+</div>
+
+
+<!-- App logic -->
+<script src="js/app.js"></script>
+<script src="js/api-storage.js"></script>
+<script src="js/my-designs.js"></script>
+<script src="js/mobile-ui.js"></script>
+</body>
+</html>
